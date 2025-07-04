@@ -1,12 +1,22 @@
 from rest_framework import serializers
-from business.models import Branch
+from business.models import Branch, Business
 
 class BusinessSerializer(serializers.ModelSerializer):
-    business = serializers.StringRelatedField()
-    category = serializers.StringRelatedField()
-    created_at = serializers.StringRelatedField()
-    address = serializers.StringRelatedField()
+    # category = serializers.StringRelatedField()
+    Created_at = serializers.DateTimeField(source="created_at")
+    Name = serializers.CharField(source="name")
+    Category = serializers.CharField(source="category.name")
+    no_of_locations = serializers.SerializerMethodField()
 
     class Meta:
-        model = Branch
-        fields = ['id','business','created_at','category','address']
+        model = Business
+        fields = [
+            'id',
+            'Name',
+            'Created_at',
+            'Category',
+            'no_of_locations'
+        ]
+
+    def get_no_of_locations(self, obj):
+        return Branch.objects.filter(business__id=obj.id).count()

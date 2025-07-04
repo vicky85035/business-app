@@ -9,6 +9,9 @@ class Category(models.Model):
 	def __str__(self):
 		return self.name
 
+	class Meta:
+		verbose_name_plural = "Categories"
+
 class Marketing(BaseModelMixin):
 	"""model for define the business type or industry
 	belongs to the business"""
@@ -59,8 +62,8 @@ class Business(BaseModelMixin):
 	class Meta:
 		verbose_name = "Business"
 		verbose_name_plural = "Businesses"
-	
-	
+
+
 	def __str__(self):
 		return self.name
 
@@ -105,7 +108,7 @@ class Branch(BaseModelMixin):
 		verbose_name = "Branch"
 		verbose_name_plural = "Branches"
 		app_label = "business"
-  
+
 	def __str__(self):
 		return f'{self.business} from {self.name}'
 
