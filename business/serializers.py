@@ -20,27 +20,35 @@ class BusinessSerializer(serializers.ModelSerializer):
 
     def get_no_of_locations(self, obj):
         return Branch.objects.filter(business__id=obj.id).count()
-    
+
 class BranchSerializer(serializers.ModelSerializer):
-    Business = serializers.StringRelatedField(source = 'business')
-    Branch_name = serializers.SerializerMethodField()
-    created_by = serializers.EmailField(source='added_by')
+    business = serializers.CharField(source = 'business.name')
+    branch_name = serializers.SerializerMethodField()
+    created_by = serializers.EmailField(source='added_by.first_name')
     created_on = serializers.DateTimeField(source = 'business.created_at')
-    Team_members = serializers.StringRelatedField(source = 'business.team')
+    team_members = serializers.SerializerMethodField()
 
     class Meta:
         model = Branch
         fields = [
             'id',
-            'Business',
-            'Branch_name',
+            'business',
+            'branch_name',
             'created_by',
             'created_on',
-            'Team_members',
+            'team_members',
         ]
 
-    def get_Branch_name(self, obj):
+    def get_branch_name(self, obj):
         if obj.name:
             return obj.name
         else:
             return obj.alias
+
+    def get_team_members(self, obj):
+        # members = []
+        # for user in obj.branch_owner.all():
+        #     members.append(user.first_name)
+        # return members
+
+        return list(obj.branch_owner.all().values_list('first_name', flat=True))
