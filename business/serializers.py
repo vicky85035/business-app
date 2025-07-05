@@ -24,7 +24,7 @@ class BusinessSerializer(serializers.ModelSerializer):
 class BranchSerializer(serializers.ModelSerializer):
     business = serializers.CharField(source = 'business.name')
     branch_name = serializers.SerializerMethodField()
-    created_by = serializers.EmailField(source='added_by.first_name')
+    created_by = serializers.SerializerMethodField()
     created_on = serializers.DateTimeField(source = 'business.created_at')
     team_members = serializers.SerializerMethodField()
 
@@ -46,9 +46,20 @@ class BranchSerializer(serializers.ModelSerializer):
             return obj.alias
 
     def get_team_members(self, obj):
-        # members = []
-        # for user in obj.branch_owner.all():
-        #     members.append(user.first_name)
-        # return members
+        members = []
+        for user in obj.branch_owner.all():
+            if user.last_name:
+                members.append(f'{user.first_name} {user.last_name}')
+            else:
+                members.append(user.first_name)
+        return members
 
-        return list(obj.branch_owner.all().values_list('first_name', flat=True))
+        # first_name = list(obj.branch_owner.all().values_list('first_name', flat=True))
+        # last_name = list(obj.branch_owner.all().values_list('last_name', flat=True))
+        # return f'{first_name} {last_name}'
+    
+    def get_created_by(self,obj):
+        # return f'{obj.added_by.first_name} {obj.added_by.last_name}' 
+        if obj.added_by.last_name:
+            return f'{obj.added_by.first_name} {obj.added_by.last_name}'
+        return obj.added_by.first_name
