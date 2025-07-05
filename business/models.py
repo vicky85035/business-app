@@ -123,7 +123,7 @@ class Address(BaseModelMixin):
 
 	def __str__(self):
 		return self.formatted_address
-	
+
 	class Meta:
 		verbose_name_plural = "Addresses"
 
