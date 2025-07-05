@@ -48,15 +48,18 @@ class BranchSerializer(serializers.ModelSerializer):
     def get_team_members(self, obj):
         members = []
         for user in obj.branch_owner.all():
-            if user.last_name:
-                members.append(f'{user.first_name} {user.last_name}')
-            else:
-                members.append(user.first_name)
+            members.append(
+                {
+                    'id': user.id,
+                    'name': user.name,
+                    'email': user.email,
+                    'joined_date': user.date_joined,
+                    'no_of_locations': Branch.objects.filter(branch_owner=user.id).count()
+                }
+            )
         return members
-
-        # first_name = list(obj.branch_owner.all().values_list('first_name', flat=True))
-        # last_name = list(obj.branch_owner.all().values_list('last_name', flat=True))
-        # return f'{first_name} {last_name}'
+    
+        # return list(obj.branch_owner.all().values_list('first_name', flat=True))
     
     def get_created_by(self,obj):
         # return f'{obj.added_by.first_name} {obj.added_by.last_name}' 
