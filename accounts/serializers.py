@@ -17,3 +17,4 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_no_of_locations(self, obj):
         return Branch.objects.filter(branch_owner=obj.id).count()
+    
