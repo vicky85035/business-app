@@ -52,17 +52,17 @@ class BranchSerializer(serializers.ModelSerializer):
                 {
                     'id': user.id,
                     'name': user.name,
-                    'email': user.email,
-                    'joined_date': user.date_joined,
-                    'no_of_locations': Branch.objects.filter(branch_owner=user.id).count()
+                    # 'email': user.email,
+                    # 'joined_date': user.date_joined,
+                    # 'no_of_locations': Branch.objects.filter(branch_owner=user.id).count()
                 }
             )
         return members
-    
+
         # return list(obj.branch_owner.all().values_list('first_name', flat=True))
-    
+
     def get_created_by(self,obj):
-        # return f'{obj.added_by.first_name} {obj.added_by.last_name}' 
+        # return f'{obj.added_by.first_name} {obj.added_by.last_name}'
         if obj.added_by.last_name:
             return f'{obj.added_by.first_name} {obj.added_by.last_name}'
         return obj.added_by.first_name
